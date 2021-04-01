@@ -1,0 +1,115 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.2.0.0",
+	"parameters": {
+		"artifactLocation": {
+			"defaultValue": "main/examples/",
+			"metadata": {
+				"description": "Location where modules folder is stored."
+			},
+			"type": "string"
+		},
+		"templateBaseUrl": {
+			"defaultValue": "https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/",
+			"metadata": {
+				"description": "URL where templates are stored."
+			},
+			"type": "string"
+		}
+	},
+	"variables": {
+		"deploymentApiVersion": "2019-05-01"
+	},
+	"resources": [
+		{
+			"apiVersion": "[variables('deploymentApiVersion')]",
+			"name": "publicIpTemplate",
+			"properties": {
+				"mode": "Incremental",
+				"parameters": {
+					"dnsLabel": {
+						"value": "appDns"
+					},
+					"nsg0": {
+						"value": [
+							{
+								"destinationPortRanges": ["22","8443"],
+								"sourceAddressPrefix": "*"
+							},
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*"
+							}
+						]
+					},
+					"nsg1": {
+						"value": [
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*"
+							}
+						]
+					},
+					"nsg2": {
+						"value": [
+							{
+								"destinationPortRanges": ["80","443"],
+								"sourceAddressPrefix": "*"
+							}
+						]
+					},
+					"numberPublicExternalIPAddresses": {
+						"value": 1
+					},
+					"numberPublicMgmtIPAddresses": {
+						"value": 0
+					},
+					"tagValues": {
+						"value": {
+							"application": "APP",
+							"cost": "COST",
+							"environment": "ENV",
+							"group": "GROUP",
+							"owner": "OWNER"
+						}
+					}
+				},
+				"templateLink": {
+					"contentVersion": "1.2.0.0",
+					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/publicip/publicip.json')]"
+				}
+			},
+			"type": "Microsoft.Resources/deployments"
+		}
+	],
+	"outputs": {
+		"externalIpIds": {
+			"type": "array",
+			"value": "[reference('publicIpTemplate').outputs.externalIpIds.value]"
+		},
+		"externalIps": {
+			"type": "array",
+			"value": "[reference('publicIpTemplate').outputs.externalIps.value]"
+		},
+		"mgmtIpIds": {
+			"type": "array",
+			"value": "[reference('publicIpTemplate').outputs.mgmtIpIds.value]"
+		},
+		"mgmtIps": {
+			"type": "array",
+			"value": "[reference('publicIpTemplate').outputs.mgmtIps.value]"
+		},
+		"nsg0Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg0Id.value]"
+		},
+		"nsg1Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg1Id.value]"
+		},
+		"nsg2Id": {
+			"type": "string",
+			"value": "[reference('dagTemplate').outputs.nsg2Id.value]"
+		}
+	}
+}

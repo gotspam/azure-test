@@ -15,7 +15,7 @@
 			"value": "f5devcentral/f5-demo-app:1.0.1"
 		},
 		"runtimeConfig": {
-			"value": "https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/runtime-init-conf-bigiq.yaml"
+			"value": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/runtime-init-conf-bigiq.yaml"
 		},
 		"restrictedSrcMgmtAddress": {
 			"value": ""

@@ -1,8 +1,8 @@
 
 # Deploying Application Template
 
-[![Releases](https://img.shields.io/github/release/gotspam/azure-test.svg)](https://github.com/gotspam/azure-test/releases)
-[![Issues](https://img.shields.io/github/issues/gotspam/azure-test.svg)](https://github.com/gotspam/azure-test/issues)
+[![Releases](https://img.shields.io/github/release/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/releases)
+[![Issues](https://img.shields.io/github/issues/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/issues)
 
 ## Contents
 

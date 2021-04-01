@@ -1,8 +1,8 @@
 
 # Deploying BIG-IP Template
 
-[![Releases](https://img.shields.io/github/release/gotspam/azure-test.svg)](https://github.com/gotspam/azure-test/releases)
-[![Issues](https://img.shields.io/github/issues/gotspam/azure-test.svg)](https://github.com/gotspam/azure-test/issues)
+[![Releases](https://img.shields.io/github/release/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/releases)
+[![Issues](https://img.shields.io/github/issues/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/issues)
 
 ## Contents
 
@@ -362,7 +362,7 @@ Example on one line:
                 "My_ASM_Policy": {
                     "class": "WAF_Policy",
                     "ignoreChanges": true,
-                    "url": "https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml"
+                    "url": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml"
                 },
                 "class": "Application",
                 "serviceMain": {
@@ -404,5 +404,5 @@ Example on one line:
 ```
 ## Resource Creation Flow Chart
 
-![Resource Creation Flow Chart](https://github.com/gotspam/azure-test/blob/master/examples/images/azure-bigip-module.png)
+![Resource Creation Flow Chart](https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/images/azure-bigip-module.png)
 

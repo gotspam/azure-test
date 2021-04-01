@@ -50,7 +50,7 @@ extension_services:
                 class: WAF_Policy
                 ignoreChanges: true
                 enforcementMode: blocking
-                url: 'https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml'
+                url: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml'
               class: Application
               serviceMain:
                 class: Service_HTTP

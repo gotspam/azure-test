@@ -1,15 +1,15 @@
 ---
-extension_packages:
+extension_packages: 
   install_operations:
-  - extensionHash: 536eccb9dbf40aeabd31e64da8c5354b57d893286ddc6c075ecc9273fcca10a1
-    extensionType: do
-    extensionVersion: 1.16.0
-  - extensionHash: de615341b91beaed59195dceefc122932580d517600afce1ba8d3770dfe42d28
-    extensionType: as3
-    extensionVersion: 3.23.0
-  - extensionHash: 333e11a30ba88699ac14bc1e9546622540a5e889c415d5d53a8aeaf98f6f872e
-    extensionType: ts
-    extensionVersion: 1.15.0
+    - extensionType: do
+      extensionVersion: 1.19.0
+      extensionUrl: https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.19.0/f5-declarative-onboarding-1.19.0-2.noarch.rpm
+    - extensionType: as3
+      extensionVersion: 3.26.0
+      extensionUrl: https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.26.0/f5-appsvcs-3.26.0-5.noarch.rpm
+    - extensionType: ts
+      extensionVersion: 1.18.0
+      extensionUrl: https://github.com/F5Networks/f5-telemetry-streaming/releases/download/v1.18.0/f5-telemetry-1.18.0-2.noarch.rpm
 extension_services:
   service_operations:
   - extensionType: do
@@ -17,6 +17,10 @@ extension_services:
     value:
       Common:
         class: Tenant
+        dbvars:
+          class: DbVariables
+          provision.extramb: 500
+          restjavad.useextramb: true
         myDns:
           class: DNS
           nameServers:
@@ -29,7 +33,6 @@ extension_services:
           bigIqPassword: "{{{BIGIQ_PASSWORD}}}"
           licensePool: clpv2
           skuKeyword1: F5-BIG-MSP-BT-1G
-          tenant: myTenant
           unitOfMeasure: hourly
           reachable: false
           hypervisor: azure
@@ -63,7 +66,7 @@ extension_services:
               class: WAF_Policy
               ignoreChanges: true
               enforcementMode: blocking
-              url: https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml
+              url: https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/generic_ready_template/Rapid_Depolyment_Policy_13_1.xml
             class: Application
             serviceMain:
               class: Service_HTTP
@@ -116,17 +119,7 @@ extension_services:
         debug: true
         logLevel: debug
 post_onboard_enabled: []
-pre_onboard_enabled:
-  - name: provision_rest
-    type: inline
-    commands:
-      - /usr/bin/setdb provision.extramb 1000
-      - /usr/bin/setdb restjavad.useextramb true
-      - '/usr/bin/curl -s -f -u admin: -H "Content-Type: application/json" -d ''{"maxMessageBodySize":134217728}'' -X POST http://localhost:8100/mgmt/shared/server/messaging/settings/8100 | jq .'
-  - name: provision_modules
-    type: inline
-    commands:
-      - echo 'sys provision asm { level nominal }' >> bigip_base.conf
+pre_onboard_enabled: []
 runtime_parameters:
 - name: HOST_NAME
   type: metadata

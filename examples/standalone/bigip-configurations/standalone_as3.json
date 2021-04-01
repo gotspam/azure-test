@@ -7,7 +7,8 @@
                 "My_ASM_Policy": {
                     "class": "WAF_Policy",
                     "ignoreChanges": true,
-                    "url": "https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml"
+                    "enforcementMode": "blocking",
+                    "url": "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/generic_ready_template/Rapid_Depolyment_Policy_13_1.xml"
                 },
                 "class": "Application",
                 "serviceMain": {
@@ -27,7 +28,7 @@
                     "members": [
                         {
                             "serverAddresses": [
-                                "10.0.0.2"
+                                "10.0.1.4"
                             ],
                             "servicePort": 80
                         }

@@ -21,7 +21,7 @@
 			"value": "appDns"
 		},
 		"image": {
-			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000"
+			"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.200000"
 		},
 		"inboundMgmtNatPoolID": {
 			"value": ""
@@ -93,10 +93,10 @@
 			"value": ""
 		},
 		"vmScaleSetMaxCount": {
-			"value": 2
+			"value": 4
 		},
 		"vmScaleSetMinCount": {
-			"value": 1
+			"value": 2
 		},
 		"vmssName": {
 			"value": "bigip-vmss"

@@ -15,13 +15,13 @@ extension_services:
   service_operations:
     - extensionType: do
       type: url
-      value: 'https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/autoscale-do-payg.json'
+      value: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/autoscale-do-payg.json'
     - extensionType: as3
       type: url
-      value: 'https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/autoscale-as3.json'
+      value: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/autoscale-as3.json'
     - extensionType: ts
       type: url
-      value: 'https://raw.githubusercontent.com/gotspam/azure-test/master/examples/autoscale/bigip-configurations/autoscale-ts.json'
+      value: 'https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/autoscale-ts.json'
 post_onboard_enabled: []
 pre_onboard_enabled:
   - name: provision_rest

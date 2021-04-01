@@ -1,5 +1,5 @@
 
-# Deploying the BIG-IP VE in Azure - Example Auto Scale BIG-IP WAF (LTM + ASM) - VM Scale Set (Frontend via ALB) - PAYG Licensing
+# Deploying the BIG-IP VE in Azure - Example Standalone BIG-IP WAF (LTM + ASM) - PAYG Licensing
 
 [![Releases](https://img.shields.io/github/release/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/releases)
 [![Issues](https://img.shields.io/github/issues/f5networks/f5-azure-arm-templates-v2.svg)](https://github.com/f5networks/f5-azure-arm-templates-v2/issues)
@@ -18,28 +18,27 @@
 
 ## Introduction
 
-This solution uses a parent template to launch several linked child templates (modules) to create a full example stack for the BIG-IP autoscale solution. The linked templates are located in the examples/modules directories in this repository. **F5 encourages you to clone this repository and modify these templates to fit your use case.** 
+This solution uses a parent template to launch several linked child templates (modules) to create a full example stack for the BIG-IP standalone solution. The linked templates are located in the examples/modules directories in this repository. **F5 encourages you to clone this repository and modify these templates to fit your use case.** 
 
 The modules below create the following resources:
 
-- **Network**: This template creates Azure Virtual Networks, subnets, and Route Tables.
+- **Network**: This template creates Azure Virtual Networks, subnets, and the management Network Security Group.
 - **Application**: This template creates a generic example application for use when demonstrating live traffic through the BIG-IPs.
-- **Disaggregation** *(DAG)*: This template creates resources required to get traffic to the BIG-IP, including Azure Network Security Groups, Public IP Addresses, internal/external Load Balancers, and accompanying resources such as load balancing rules, NAT rules, and probes.
+- **PublicIp**: This template creates resources required to get traffic to the BIG-IP, including Azure Network Security Groups, and Public IP Addresses.
 - **Access**: This template creates an Azure Managed User Identity, KeyVault, and secret used to set the admin password on the BIG-IP instances.
-- **BIG-IP**: This template creates the Microsoft Azure VM Scale Set with F5 BIG-IP Virtual Editions provisioned with Local Traffic Manager (LTM) and Application Security Manager (ASM). Traffic flows from the Azure load balancer to the BIG-IP VE instances and then to the application servers. The BIG-IP VE(s) are configured in single-NIC mode. Auto scaling means that as certain thresholds are reached, the number of BIG-IP VE instances automatically increases or decreases accordingly. The BIG-IP module template can be deployed separately from the example template provided here into an "existing" stack.
+- **BIG-IP**: This template creates the Microsoft Azure VM instance for F5 BIG-IP Virtual Edition provisioned with Local Traffic Manager (LTM) and Application Security Manager (ASM). Traffic flows from the BIG-IP VE instances and then to the application servers. The BIG-IP VE(s) are configured in single-NIC mode. The BIG-IP module template can be deployed separately from the example template provided here into an "existing" stack.
 
-This solution leverages more traditional Auto Scale configuration management practices where each instance is created with an identical configuration as defined in the Scale Set's "model". Scale Set sizes are no longer restricted to the small limitations of the cluster. The BIG-IP's configuration, now defined in a single convenient YAML or JSON [F5 BIG-IP Runtime Init](https://github.com/F5Networks/f5-bigip-runtime-init) configuration file, leverages [F5 Automation Tool Chain](https://www.f5.com/pdf/products/automation-toolchain-overview.pdf) declarations which are easier to author, validate and maintain as code. For instance, if you need to change the configuration on the BIG-IPs in the deployment, you update the instance model by passing a new config file (which references the updated Automation Toolchain declarations) via template's runtimeConfig input parameter. New instances will be deployed with the updated configurations.  
+The BIG-IP's configuration, now defined in a single convenient YAML or JSON [F5 BIG-IP Runtime Init](https://github.com/F5Networks/f5-bigip-runtime-init) configuration file, leverages [F5 Automation Tool Chain](https://www.f5.com/pdf/products/automation-toolchain-overview.pdf) declarations which are easier to author, validate and maintain as code.
 
 In most cases, it is especially expected that WAF or Application Service (as defined in AS3 declaration) will be customized, but if you use the default value from the example below for any of the service operations, the corresponding example declaration from the BIG-IP module folder will be used.
 
-F5 has provided the following F5 BIG-IP Runtime Init configurations and example declarations for the supported Automation Toolchain components in the examples/autoscale/bigip-configurations folder:
+F5 has provided the following F5 BIG-IP Runtime Init configurations and example declarations for the supported Automation Toolchain components in the examples/standalone/bigip-configurations folder:
 
-- autoscale-do-payg.json: The Declarative Onboarding declaration configures L2/L3 networking and system settings on BIG-IP. See the [DO documentation](https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/) for details on how to use DO.
-- autoscale-as3.json: The Application Services declaration configures L4-L7 application services on BIG-IP, including service discovery. See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/) for details on how to use AS3.
-- autoscale-ts.json: The Telemetry Streaming declaration configures BIG-IP to declaratively aggregate, normalize, and forward statistics and events to a consumer application. See the [TS documentation](https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/) for details on how to use TS.
+- standalone_do_payg.json: The Declarative Onboarding declaration configures L2/L3 networking and system settings on BIG-IP. See the [DO documentation](https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/) for details on how to use DO.
+- standalone_as3.json: The Application Services declaration configures L4-L7 application services on BIG-IP, including service discovery. See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/) for details on how to use AS3.
+- standalone_ts.json: The Telemetry Streaming declaration configures BIG-IP to declaratively aggregate, normalize, and forward statistics and events to a consumer application. See the [TS documentation](https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/) for details on how to use TS.
 - runtime-init-conf.yaml: This configuration file installs packages and creates WAF-protected services for a PAYG licensed deployment based on the Automation Toolchain declaration URLs listed above.
 - runtime-init-conf-payg.yaml: This inline configuration file installs packages and creates WAF-protected services for a PAYG licensed deployment.
-- Rapid_Deployment_Policy_13_1.xml: This ASM security policy is supported for BIG-IP 13.1 and later.
 
 
 Here is an example F5 BIG-IP Runtime Init configuration that uses the previously referenced Automation Toolchain declarations:
@@ -101,7 +100,7 @@ extension_services:
               class: WAF_Policy
               ignoreChanges: true
               enforcementMode: blocking
-              url: https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/master/examples/autoscale/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml
+              url: https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/generic_ready_template/Rapid_Depolyment_Policy_13_1.xml
             class: Application
             serviceMain:
               class: Service_HTTP
@@ -210,7 +209,7 @@ For information on getting started using F5's ARM templates on GitHub, see [Micr
 
 - If you have cloned this repository to an internally hosted location in order to modify the templates, you can use the templateBaseUrl and artifactLocation input parameters to specify the location of the modules.
 
-- To facilitate this immutable deployment model, the BIG-IP leverages the F5 BIG-IP Runtime Init package.  The BIG-IP template requires a valid f5-bigip-runtime-init configuration file and execution command to be specified in the properties of the Azure Virtual Machine Scale Set resource. See <a href="https://github.com/F5Networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> for more information.<br>
+- To facilitate this immutable deployment model, the BIG-IP leverages the F5 BIG-IP Runtime Init package.  The BIG-IP template requires a valid f5-bigip-runtime-init configuration file and execution command to be specified in the properties of the Azure Virtual Machine resource. See <a href="https://github.com/f5networks/f5-bigip-runtime-init">F5 BIG-IP Runtime Init</a> for more information.<br>
 
 - In this solution, the BIG-IP VEs must have the [LTM](https://f5.com/products/big-ip/local-traffic-manager-ltm) and [ASM](https://f5.com/products/big-ip/application-security-manager-asm) modules enabled to provide advanced traffic management and web application security functionality. The provided Declarative Onboarding declaration describes how to provision these modules. This template uses BIG-IP **private** management address when license is requested via BIG-IQ.
 
@@ -218,7 +217,7 @@ For information on getting started using F5's ARM templates on GitHub, see [Micr
 
 - F5 ARM templates now capture all deployment logs to the BIG-IP VE in **/var/log/cloud/azure**. Depending on which template you are using, this includes deployment logs (stdout/stderr) and more. Logs from Automation Toolchain components are located at **/var/log/restnoded/restnoded.log** on each BIG-IP instance.
 
-- F5 ARM templates do not reconfigure existing Azure resources, such as network security groups. Depending on your configuration, you may need to configure these resources to allow the BIG-IP VE(s) to receive traffic for your application. Similarly, the DAG example template that deploys Azure Load Balancer(s) configures load balancing rules and probes on those resources to forward external traffic to the BIG-IP(s) on standard ports 443 and 80. F5 recommends cloning this repository and modifying the module templates to fit your use case.
+- F5 ARM templates do not reconfigure existing Azure resources, such as network security groups. Depending on your configuration, you may need to configure these resources to allow the BIG-IP VE(s) to receive traffic for your application. Similarly, the PublicIp example template that deploys public IPs to forward external traffic to the BIG-IP(s). F5 recommends cloning this repository and modifying the module templates to fit your use case.
 
 - See the **[Configuration Example](#configuration-example)** section for a configuration diagram and description for this solution.
 
@@ -232,11 +231,14 @@ For information on getting started using F5's ARM templates on GitHub, see [Micr
 | uniqueString | Yes | A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value. |
 | sshKey | Yes | Supply the public key that will be used for SSH authentication to the BIG-IP and application virtual machines. Note: This should be the public key as a string, typically starting with **---- BEGIN SSH2 PUBLIC KEY ----** and ending with **---- END SSH2 PUBLIC KEY ----**. |
 | newPassword | No | The new password to be used for the admin user on the BIG-IP instances. This is required for creating the AZURE_PASSWORD secret referenced in the runtimeConfig template parameter. If this value is left blank, the access module template is not deployed. |
-| appContainer | No | The name of a container to download and install which is used for the example application server. If this value is left blank, the application module template is not deployed. |
+| appContainer | No | The name of a container to download and install which is used for the example application server. Parameter 'appContainer' or 'cloudInitDeliveryLocation' must exist in order to deploy the application module (aka app server). |
+| cloudInitDeliveryLocation | No | (PREFERRED) URI to cloud init file used for customizing VM. Parameter 'appContainer' or 'cloudInitDeliveryLocation' must exist in order to deploy the application module (aka app server). |
 | restrictedSrcMgmtAddress | Yes | When creating management security group, this field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation, or asterisk for all sources. |
 | runtimeConfig | Yes | Supply a URL to the bigip-runtime-init configuration file in YAML or JSON format, or an escaped JSON string to use for f5-bigip-runtime-init configuration. |
 | useAvailabilityZones | Yes | This deployment can deploy resources into Azure Availability Zones (if the region supports it).  If that is not desired the input should be set 'No'. If the region does not support availability zones the input should be set to No. |
 | tagValues | Yes | Default key/value resource tags will be added to the resources in this deployment, if you would like the values to be unique adjust them as needed for each key. |
+| zoneChoice | Yes | If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the number of the existing Availability Zone you want to use. |
+
 
 ### Template Outputs
 
@@ -247,7 +249,7 @@ For information on getting started using F5's ARM templates on GitHub, see [Micr
 | appPublicIps | Application Public IP Addresses | Application Template | array |
 | appPrivateIp | Application Private IP Address | Application Template | string |
 | appUsername | Application user name | Application Template | string |
-| vmssId | Virtual Machine Scale Set resource ID | BIG-IP Template | string |
+| vmId | Virtual Machine Scale Set resource ID | BIG-IP Template | string |
 | bigipUsername | BIG-IP user name | BIG-IP Template | string |
 | bigipPassword | BIG-IP password | BIG-IP Template | string |
 
@@ -320,7 +322,7 @@ Use the appropriate button below to deploy:
 
 - **PAYG**: This allows you to use pay-as-you-go hourly billing.
 
-  [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FF5Networks%2Ff5-azure-arm-templates-v2%2Fv1.2.0.0%2Fexamples%2Fautoscale%2Fpayg%2Fazuredeploy.json)
+  [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgotspam%2Ff5-azure-arm-templates-v2%2F%2Fmain%2Fexamples%2Fstandalone%2Fpayg%2Fazuredeploy.json)
 
 
 ### Programmatic deployments
@@ -330,7 +332,7 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 #### PowerShell Script Example
 
 ```powershell
-## Example Command: .\Deploy_via_PS.ps1 -templateBaseUrl https://cdn.f5.com/product/cloudsolutions/ -artifactLocation f5-azure-arm-templates-v2/examples/ -sshKey <value> -uniqueString <value> -newPassword <value> -appContainer f5devcentral/f5-demo-app:1.0.1 -restrictedSrcMgmtAddress * -runtimeConfig https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/runtime-init-conf.yaml -useAvailabilityZones <value>
+## Example Command: .\Deploy_via_PS.ps1 -templateBaseUrl https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/ -artifactLocation main/examples/ -sshKey <value> -uniqueString <value> -newPassword <value> -cloudInitDeliveryLocation https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt -restrictedSrcMgmtAddress * -runtimeConfig https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml -useAvailabilityZones <value> -zoneChoice <value>
 ```
 
 =======
@@ -339,7 +341,7 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 
 ```bash
 ## Example Command: ./deploy_via_bash.sh 
---templateBaseUrl https://cdn.f5.com/product/cloudsolutions/ --artifactLocation f5-azure-arm-templates-v2/examples/ --sshKey <value> --uniqueString <value> --newPassword <value> --appContainer f5devcentral/f5-demo-app:1.0.1 --restrictedSrcMgmtAddress * --runtimeConfig https://cdn.f5.com/product/cloudsolutions/declarations/template2-0/autoscale-waf/runtime-init-conf.yaml --useAvailabilityZones <value>
+--templateBaseUrl https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/ --artifactLocation main/examples/ --sshKey <value> --uniqueString <value> --newPassword <value> --cloudInitDeliveryLocation https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt --restrictedSrcMgmtAddress * --runtimeConfig https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml --useAvailabilityZones <value> -zoneChoice <value>
 ```
 
 
@@ -349,13 +351,13 @@ This section describes how to validate the template deployment, test the WAF ser
 
 ### Validating the Deployment
 
-To view the status of the example and module template deployments, navigate to Resource Groups->**your resource group name**->Deployments. You should see a series of deployments, including one each for the example template as well as the accessTemplate, appTemplate, networkTemplate, dagTemplate, bigipTemplate, and functionTemplate. The deployment status for each template deployment should be "Succeeded".  If any of the deployments are in a failed state, proceed to the Troubleshooting Steps section below.
+To view the status of the example and module template deployments, navigate to Resource Groups->**your resource group name**->Deployments. You should see a series of deployments, including one each for the example template as well as the accessTemplate, appTemplate, networkTemplate, publicipTemplate, and bigipTemplate. The deployment status for each template deployment should be "Succeeded".  If any of the deployments are in a failed state, proceed to the Troubleshooting Steps section below.
 
 ### Testing the WAF Service
 
 To test the WAF service, perform the following steps:
-- Check the VM Scale Set instance health state; instance health is based on Azure's ability to connect to your application via the VM Scale Set's load balancer
-  - Navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vmss**->Instances
+- Check the VM instance health state
+  - Navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vm**->Instances
   - The health state for each instance should be "Healthy". If the state is "Unhealthy", proceed to the troubleshooting steps section
 - Obtain the IP address of the WAF service:
   - **Console**: Navigate to Resource Groups->**your resource group name**->Deployments->**your parent template deployment name**->Outputs->appPublicIps
@@ -393,10 +395,7 @@ Common deployment failure causes include:
 
 If all deployments completed successfully, wait a few minutes, then log in to the BIG-IP instance(s) via SSH to confirm BIG-IP deployment was successful (for example, if startup scripts completed as expected on the BIG-IPs). To verify BIG-IP deployment, perform the following steps:
 - Obtain the IP address of the BIG-IP instance(s):
-  - **Console**: Navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vmss**->Instances->**instance name**->Essentials->Public or Private IP address
-  - **Azure CLI**: 
-    - Public IPs: ```az vmss list-instance-public-ips --name **uniqueId-vmss** -g **your resource group name** -o json --query [].ipAddress```
-    - Private IPs: ```az vmss nic list --vmss-name **uniqueId-vmss** -g **your resource group name** -o json --query [].ipConfigurations[].privateIpAddress```
+  - **Console**: Navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vm**
 - Login to each instance via SSH:
   - **SSH key authentication**: ```ssh azureuser@<IP Address from Output> -i <path to sshKey>```
   - **Password authentication**: ```ssh admin@<IP Address from Output>``` **newPassword** when prompted
@@ -405,53 +404,18 @@ If all deployments completed successfully, wait a few minutes, then log in to th
   - /var/log/cloud/bigipRuntimeInit.log: This file contains events logged by the f5-bigip-runtime-init onboarding utility. If the configuration is invalid causing onboarding to fail, you will see those events logged here. If deployment is successful, you will see an event with the body "All operations completed successfully".
   - /var/log/restnoded/restnoded.log: This file contains events logged by the F5 Automation Toolchain components. If an Automation Toolchain declaration fails to deploy, you will see those events logged here.
 
-If you are unable to login to the BIG-IP instance(s), you can navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vmss**->Instances->**instance name**->Support and Troubleshooting->Serial console for additional information from Azure.
+If you are unable to login to the BIG-IP instance(s), you can navigate to Resource Groups->**your resource group name**->Overview->**uniqueId-vm**->Support and Troubleshooting->Serial console for additional information from Azure.
 
 
 ## Configuration Example
 
-The following is an example configuration diagram for this solution deployment. In this scenario, all access to the BIG-IP VE appliance is through an Azure Load Balancer. The Azure Load Balancer processes both management and data plane traffic into the BIG-IP VEs, which then distribute the traffic to web/application servers according to normal F5 patterns.
+The following is an example configuration diagram for this solution deployment. In this scenario, all access to the BIG-IP VE appliance is direct to the BIG-IP. The BIG-IP processes both management and data plane traffic, which then distribute the traffic to web/application servers according to normal F5 patterns.
 
-![Configuration Example](https://github.com/F5Networks/f5-azure-arm-templates-v2/blob/master/examples/autoscale/payg/diagram.png)
+![Configuration Example](./diagram.png)
 
 #### BIG-IP Lifecycle Management
 
-As new BIG-IP versions are released, existing VM scale sets can be upgraded to use those new images. This section describes the process of upgrading and retaining the configuration.
-
-#### To upgrade the BIG-IP VE Image
-
-1. Update the VM Scale Set Model to the new BIG-IP version
-    - From PowerShell: Use the PowerShell script in the **scripts** folder in this directory.
-    - Using the Azure redeploy functionality: From the Resource Group where the ARM template was initially deployed, click the successful deployment and then select to redeploy the template. If necessary, re-select all the same variables, and **only change** the BIG-IP version to the latest.
-2. Upgrade the Instances
-    1. In Azure, navigate to the VM Scale Set instances pane and verify the *Latest model* does not say **Yes** (it should have a caution sign instead of the word Yes).
-    2. Select either all instances at once or each instance one at a time (starting with instance ID 0 and working up).
-    3. Click the **Upgrade** action button.
-
-#### Configure Scale Event Notifications
-
-**Note:** You can specify email addresses for notifications within the solution and they will be applied automatically. You can also manually configure them via the VM Scale Set configuration options available within the Azure Portal.
-
-You can add notifications when scale up/down events happen, either in the form of email or webhooks. The following shows an example of adding an email address via the Azure Resources Explorer that receives an email from Azure whenever a scale up/down event occurs.
-
-Log in to the [Azure Resource Explorer](https://resources.azure.com) and then navigate to the Auto Scale settings (**Subscriptions > Resource Groups >** *resource group where deployed* **> Providers > Microsoft.Insights > Autoscalesettings > autoscaleconfig**). At the top of the screen click Read/Write, and then from the Auto Scale settings, click **Edit**.  Replace the current **notifications** json key with the example below, making sure to update the email address(es). Select PUT and notifications will be sent to the email addresses listed.
-
-```json
-    "notifications": [
-      {
-        "operation": "Scale",
-        "email": {
-          "sendToSubscriptionAdministrator": false,
-          "sendToSubscriptionCoAdministrators": false,
-          "customEmails": [
-            "email@f5.com"
-          ]
-        },
-        "webhooks": null
-      }
-    ]
-```
-
+PENDING...
 
 ## Documentation
 

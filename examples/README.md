@@ -98,7 +98,7 @@ A high level overview of customizing the templates may look like:
 
 1. Clone or fork the repository
     ```
-    git clone git@github.com:gotspam/azure-test.git  
+    git clone git@github.com:f5networks/f5-azure-arm-templates-v2.git  
     ```
     *Optional*: Create a custom branch
     
@@ -195,4 +195,4 @@ For help with authoring and support for custom CST2 templates, we recommend enga
 
 If you find an issue, we would love to hear about it.
 
-- Use the **[Issues](https://github.com/gotspam/azure-test/issues)** link on the GitHub menu bar in this repository for items such as enhancement, feature requests and bug fixes. Tell us as much as you can about what you found and how you found it.
+- Use the **[Issues](https://github.com/F5Networks/f5-azure-arm-templates-v2/issues)** link on the GitHub menu bar in this repository for items such as enhancement, feature requests and bug fixes. Tell us as much as you can about what you found and how you found it.
