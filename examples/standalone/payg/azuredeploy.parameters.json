@@ -3,7 +3,7 @@
 	"contentVersion": "1.2.0.0",
 	"parameters": {
 		"templateBaseUrl": {
-			"value": "https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/"
+			"value": "https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/"
 		},
 		"artifactLocation": {
 			"value": "main/examples/"
@@ -15,10 +15,10 @@
 			"value": ""
 		},
 		"cloudInitDeliveryLocation": {
-			"value": "https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt"
+			"value": "https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt"
 		},
 		"runtimeConfig": {
-			"value": "https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf-payg.yaml"
+			"value": "https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf-payg.yaml"
 		},
 		"restrictedSrcMgmtAddress": {
 			"value": "*"

@@ -14,13 +14,13 @@ extension_services:
   service_operations:
     - extensionType: do
       type: url
-      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_do_payg.json'
+      value: 'https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_do_payg.json'
     - extensionType: as3
       type: url
-      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_as3.json'
+      value: 'https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_as3.json'
     - extensionType: ts
       type: url
-      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_ts.json'
+      value: 'https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_ts.json'
 post_onboard_enabled: []
 pre_onboard_enabled:
   - name: provision_rest

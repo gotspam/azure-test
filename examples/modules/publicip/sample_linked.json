@@ -10,7 +10,7 @@
 			"type": "string"
 		},
 		"templateBaseUrl": {
-			"defaultValue": "https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/",
+			"defaultValue": "https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/",
 			"metadata": {
 				"description": "URL where templates are stored."
 			},

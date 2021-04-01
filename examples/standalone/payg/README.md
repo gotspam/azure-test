@@ -322,7 +322,7 @@ Use the appropriate button below to deploy:
 
 - **PAYG**: This allows you to use pay-as-you-go hourly billing.
 
-  [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FJeffGiroux%2Ff5-azure-arm-templates-v2%2F%2Fmain%2Fexamples%2Fstandalone%2Fpayg%2Fazuredeploy.json)
+  [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgotspam%2Ff5-azure-arm-templates-v2%2F%2Fmain%2Fexamples%2Fstandalone%2Fpayg%2Fazuredeploy.json)
 
 
 ### Programmatic deployments
@@ -332,7 +332,7 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 #### PowerShell Script Example
 
 ```powershell
-## Example Command: .\Deploy_via_PS.ps1 -templateBaseUrl https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/ -artifactLocation main/examples/ -sshKey <value> -uniqueString <value> -newPassword <value> -cloudInitDeliveryLocation https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt -restrictedSrcMgmtAddress * -runtimeConfig https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml -useAvailabilityZones <value> -zoneChoice <value>
+## Example Command: .\Deploy_via_PS.ps1 -templateBaseUrl https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/ -artifactLocation main/examples/ -sshKey <value> -uniqueString <value> -newPassword <value> -cloudInitDeliveryLocation https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt -restrictedSrcMgmtAddress * -runtimeConfig https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml -useAvailabilityZones <value> -zoneChoice <value>
 ```
 
 =======
@@ -341,7 +341,7 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 
 ```bash
 ## Example Command: ./deploy_via_bash.sh 
---templateBaseUrl https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/ --artifactLocation main/examples/ --sshKey <value> --uniqueString <value> --newPassword <value> --cloudInitDeliveryLocation https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt --restrictedSrcMgmtAddress * --runtimeConfig https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml --useAvailabilityZones <value> -zoneChoice <value>
+--templateBaseUrl https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/ --artifactLocation main/examples/ --sshKey <value> --uniqueString <value> --newPassword <value> --cloudInitDeliveryLocation https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/modules/application/scripts/cloud-init.txt --restrictedSrcMgmtAddress * --runtimeConfig https://raw.githubusercontent.com/gotspam/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/runtime-init-conf.yaml --useAvailabilityZones <value> -zoneChoice <value>
 ```
 
 
