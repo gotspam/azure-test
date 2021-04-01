@@ -17,7 +17,7 @@
 			"type": "string"
 		},
 		"uniqueString": {
-			"defaultValue": "f5student",
+			"defaultValue": "f5student1",
 			"metadata": {
 				"description": "A prefix that will be used to name template resources. Because some resources require globally unique names, we recommend using a unique value."
 			},
