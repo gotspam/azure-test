@@ -1,0 +1,110 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.2.0.0",
+	"parameters": {
+		"artifactLocation": {
+			"defaultValue": "main/examples/",
+			"metadata": {
+				"description": "Location where modules folder is stored."
+			},
+			"type": "string"
+		},
+		"templateBaseUrl": {
+			"defaultValue": "https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/",
+			"metadata": {
+				"description": "URL where templates are stored."
+			},
+			"type": "string"
+		}
+	},
+	"variables": {
+		"deploymentApiVersion": "2019-05-01"
+	},
+	"resources": [
+		{
+			"apiVersion": "[variables('deploymentApiVersion')]",
+			"name": "bigipTemplate",
+			"properties": {
+				"mode": "Incremental",
+				"parameters": {
+					"adminUsername": {
+						"value": "azureuser"
+					},
+					"appInsights": {
+						"value": "bigip-app"
+					},
+					"customEmail": {
+						"value": []
+					},
+					"dnsLabel": {
+						"value": "appDns"
+					},
+					"image": {
+						"value": "f5-networks:f5-big-ip-best:f5-bigip-virtual-edition-25m-best-hourly:15.1.201000"
+					},
+					"instanceType": {
+						"value": "Standard_DS2_v2"
+					},
+					"nsgId": {
+						"value": ""
+					},
+					"publicIPAddressId": {
+						"value": ""
+					},
+					"roleDefinitionId": {
+						"value": ""
+					},
+					"runtimeConfig": {
+						"value": ""
+					},
+					"sshKey": {
+						"value": ""
+					},
+					"subnetId": {
+						"value": ""
+					},
+					"tagValues": {
+						"value": {
+							"application": "APP",
+							"cost": "COST",
+							"environment": "ENV",
+							"group": "GROUP",
+							"owner": "OWNER"
+						}
+					},
+					"useAvailabilityZones": {
+						"value": "Yes"
+					},
+					"userAssignManagedIdentity": {
+						"value": ""
+					},
+					"vmName": {
+						"value": "bigip-vm"
+					},
+					"zoneChoice": {
+						"value": "1"
+					}
+				},
+				"templateLink": {
+					"contentVersion": "1.2.0.0",
+					"uri": "[concat(parameters('templateBaseUrl'), parameters('artifactLocation'), 'modules/bigip-standalone/bigip.json')]"
+				}
+			},
+			"type": "Microsoft.Resources/deployments"
+		}
+	],
+	"outputs": {
+		"appInsightsComponentId": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.appInsightsComponentId.value]"
+		},
+		"appIps": {
+			"type": "array",
+			"value": "[reference('bigipTemplate').outputs.roleAssignmentId.value]"
+		},
+		"vmId": {
+			"type": "string",
+			"value": "[reference('bigipTemplate').outputs.vmId.value]"
+		}
+	}
+}

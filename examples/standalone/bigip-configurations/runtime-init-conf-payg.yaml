@@ -1,0 +1,42 @@
+---
+extension_packages: 
+  install_operations:
+    - extensionType: do
+      extensionVersion: 1.19.0
+      extensionUrl: https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.19.0/f5-declarative-onboarding-1.19.0-2.noarch.rpm
+    - extensionType: as3
+      extensionVersion: 3.26.0
+      extensionUrl: https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.26.0/f5-appsvcs-3.26.0-5.noarch.rpm
+    - extensionType: ts
+      extensionVersion: 1.18.0
+      extensionUrl: https://github.com/F5Networks/f5-telemetry-streaming/releases/download/v1.18.0/f5-telemetry-1.18.0-2.noarch.rpm
+extension_services:
+  service_operations:
+    - extensionType: do
+      type: url
+      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_do_payg.json'
+    - extensionType: as3
+      type: url
+      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_as3.json'
+    - extensionType: ts
+      type: url
+      value: 'https://raw.githubusercontent.com/JeffGiroux/f5-azure-arm-templates-v2/main/examples/standalone/bigip-configurations/standalone_ts.json'
+post_onboard_enabled: []
+pre_onboard_enabled:
+  - name: provision_rest
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.extramb 500
+      - /usr/bin/setdb restjavad.useextramb true
+      - '/usr/bin/curl -s -f -u admin: -H "Content-Type: application/json" -d ''{"maxMessageBodySize":134217728}'' -X POST http://localhost:8100/mgmt/shared/server/messaging/settings/8100 | jq .'
+  - name: provision_modules
+    type: inline
+    commands:
+      - echo 'sys provision asm { level nominal }' >> bigip_base.conf
+runtime_parameters:
+  - name: HOST_NAME
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: compute
+      field: name
